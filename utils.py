@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 import configparser
@@ -6,7 +7,8 @@ import configparser
 # move pdf files in the list to "sent" folder
 def move_pdf_to_sent_folder(pdf_list):
     for pdf in pdf_list:
-        shutil.move(read_config_value('PATH', 'path_to_send') + pdf, read_config_value('PATH', 'path_sent'))
+        shutil.copy(read_config_value('PATH', 'path_to_send') + pdf, read_config_value('PATH', 'path_sent'))
+        os.remove(os.path.join(read_config_value('PATH', 'path_to_send'), pdf))
 
 
 def read_subject_content():
@@ -40,11 +42,11 @@ def get_date_info():
     if choice_month in months:
         month = months[choice_month]
     else:
-        print("Errore inserimento mese")
-        quit(0)
+        print("Errore inserimento mese (1->gennaio, 2-> febbraio, ...)")
+        return None
     year = (input("Inserire anno: "))
     if not (year.isnumeric()):
         print("Errore inserimento anno")
-        quit(0)
+        return None
     print('selezionato ' + month + ' ' + year)
     return [month, year]
