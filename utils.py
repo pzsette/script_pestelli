@@ -2,21 +2,24 @@ import os
 import shutil
 from pathlib import Path
 import configparser
+import path_utils
+import logging
 
 
 # move pdf files in the list to "sent" folder
 def move_pdf_to_sent_folder(pdf_list):
     for pdf in pdf_list:
-        shutil.copy(read_config_value('PATH', 'path_to_send') + pdf, read_config_value('PATH', 'path_sent'))
-        os.remove(os.path.join(read_config_value('PATH', 'path_to_send'), pdf))
+        shutil.copy(os.path.join(path_utils.get_to_send_folder_path(), pdf),
+                    os.path.join(path_utils.get_sent_folder_path(), pdf))
+        os.remove(os.path.join(path_utils.get_to_send_folder_path(), pdf))
 
 
 def read_subject_content():
-    return Path(read_config_value('PATH', 'data') + read_config_value('PATH', 'subject_filename')).read_text()
+    return Path(path_utils.get_email_subject()).read_text()
 
 
 def read_mail_content():
-    return Path(read_config_value('PATH', 'data') + read_config_value('PATH', 'email_script_filename')).read_text()
+    return Path(path_utils.get_email_script()).read_text()
 
 
 def read_config_value(section, value):
@@ -50,3 +53,7 @@ def get_date_info():
         return None
     print('selezionato ' + month + ' ' + year)
     return [month, year]
+
+
+def log_end_execution():
+    logging.info('-----------------------------------------')

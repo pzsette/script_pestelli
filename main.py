@@ -1,8 +1,24 @@
+import sys
 import extractor
 from mail_sender import *
 import logging
 
+
+def set_logging_conf():
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt='%d-%b-%y %H:%M:%S',
+        handlers=[
+            logging.FileHandler("output.log"),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    logging.getLogger().setLevel(logging.INFO)
+
+
 if __name__ == '__main__':
+
+    set_logging_conf()
 
     mail_sender = MailSender()
 
@@ -19,22 +35,16 @@ if __name__ == '__main__':
         # Perform this routine for every code
         for code_group in pdf_files_by_code.items():
             code = code_group[0]
+            pdf_list = code_group[1]
             try:
                 # get email address associated to this code and mail type
-                emails_info = extractor.find_emails(code)
-                try:
-                    # check mail type
-                    if emails_info[1] == "Falso":
-                        mail_sender.send_mail(emails_info[0], code_group[1])
-                    elif emails_info[1] == "Vero":
-                        mail_sender.send_mail_pec(emails_info[0], code_group[1])
-                    else:
-                        raise ValueError("Can't read mail type value!")
-                    # Move pdf file to "sent" folder
-                    utils.move_pdf_to_sent_folder(code_group[1])
-                except ValueError:
-                    logging.warning("Error decoding "+utils.read_config_value('PATH', 'clients_filename') + " for client " +
-                                  code)
+                customer_email_info = extractor.find_emails(code)
+                customer_email_address = customer_email_info[0]
+                customer_email_type = customer_email_info[1]
+
+                # sent pdf_list to customer
+                mail_sender.sent_pdf_list_to_customer(code, customer_email_address, customer_email_type, pdf_list)
             except ValueError:
                 logging.warning("Can't find email address for client: " + code)
-    input("Prese <Enter> to exit.")
+    input("Press <Enter> to exit.")
+    utils.log_end_execution()
