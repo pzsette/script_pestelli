@@ -76,7 +76,7 @@ class MailSender:
         message = MIMEMultipart()
         message['From'] = self.sender_pec
         message['To'] = receiver
-        message['Subject'] = utils.read_subject_content() + self._month + ' ' + self._year
+        message['Subject'] = utils.read_subject_content() + ' ' + self._month + ' ' + self._year
 
         message.attach(MIMEText(body, 'plain'))
 
