@@ -45,6 +45,6 @@ if __name__ == '__main__':
                 # sent pdf_list to customer
                 mail_sender.sent_pdf_list_to_customer(code, customer_email_address, customer_email_type, pdf_list)
             except ValueError:
-                logging.warning("Can't find email address for client: " + code)
+                logging.warning("Can't find email address for client: " + code+"\n")
     input("Press <Enter> to exit.")
     utils.log_end_execution()

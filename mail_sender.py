@@ -41,7 +41,7 @@ class MailSender:
             utils.move_pdf_to_sent_folder(pdf_list)
         except ValueError:
             logging.warning("Error decoding " + utils.read_config_value('PATH', 'clients_filename') +
-                            " for client " + code)
+                            " for client " + code+"\n")
 
     # send mail with standard mail address
     def _send_mail(self, receiver, pdf_list):
@@ -62,10 +62,10 @@ class MailSender:
         server.login(self.username, self.password)
 
         text = message.as_string()
-        #server.sendmail(self.sender, receiver, text)
+        server.sendmail(self.sender, receiver, text)
         server.quit()
 
-        logging.info("mail inviata!")
+        logging.info("mail inviata!\n")
 
     # send mail with pec address
     def _send_mail_pec(self, receiver, pdf_list):
@@ -86,10 +86,10 @@ class MailSender:
         server.login(self.username_pec, self.password_pec)
 
         text = message.as_string()
-        #server.sendmail(self.sender_pec, receiver, text)
+        server.sendmail(self.sender_pec, receiver, text)
         server.quit()
 
-        logging.info("mail sent!")
+        logging.info("mail sent!\n")
 
     @staticmethod
     def _add_attachments(message, pdf_list):
