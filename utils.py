@@ -56,4 +56,4 @@ def get_date_info():
 
 
 def log_end_execution():
-    logging.info('--------------------------END EXECUTION--------------------------')
+    logging.info('--------------------------END EXECUTION--------------------------\n')
