@@ -48,4 +48,3 @@ if __name__ == '__main__':
                 logging.warning("Can't find email address for client: " + code+"\n")
     utils.log_end_execution()
     input("Press <Enter> to exit.")
-

@@ -114,10 +114,12 @@ class MailSender:
         except smtplib.SMTPAuthenticationError:
             logging.error("Email authentication failed!\n")
             utils.log_end_execution()
+            input("Press <Enter> to exit.")
             quit()
         except Exception:
             logging.error("Error connecting to email server, check internet connection or smtp parameters!\n")
             utils.log_end_execution()
+            input("Press <Enter> to exit.")
             quit()
         return server
 
