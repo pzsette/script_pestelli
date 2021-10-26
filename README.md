@@ -26,6 +26,5 @@ data_folder = data
 clients_filename = clienti.csv
 email_script_filename = email.txt
 subject_filename = oggetto.txt
-
 ```
  
