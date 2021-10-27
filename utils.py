@@ -55,5 +55,11 @@ def get_date_info():
     return [month, year]
 
 
+def end_execution():
+    log_end_execution()
+    input("Press <Enter> to exit.")
+    quit()
+
+
 def log_end_execution():
     logging.info('--------------------------END EXECUTION--------------------------\n')

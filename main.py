@@ -18,6 +18,8 @@ def set_logging_conf():
 
 if __name__ == '__main__':
 
+    path_utils.check_if_all_paths_exist()
+
     set_logging_conf()
 
     mail_sender = MailSender()
@@ -46,5 +48,4 @@ if __name__ == '__main__':
                 mail_sender.sent_pdf_list_to_customer(code, customer_email_address, customer_email_type, pdf_list)
             except ValueError:
                 logging.warning("Can't find email address for client: " + code+"\n")
-    utils.log_end_execution()
-    input("Press <Enter> to exit.")
+    utils.end_execution()
