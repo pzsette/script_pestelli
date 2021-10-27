@@ -93,7 +93,7 @@ class MailSender:
     def _build_message(self, receiver, sender):
         message = MIMEMultipart()
         message['From'] = sender
-        message['To'] = receiver
+        message['To'] ="Ragione sociale <"+receiver+">"
         message['Subject'] = utils.read_subject_content() + ' ' + self._month + ' ' + self._year
         return message
 
