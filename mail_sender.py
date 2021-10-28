@@ -28,34 +28,27 @@ class MailSender:
         self._month = None
         self._year = None
 
-    def sent_pdf_list_to_customer(self, code, customer_email, mail_type, pdf_list):
-        try:
-            # check mail type
-            if mail_type == "Falso" or mail_type == "Vero":
-                self._send_mail(customer_email, mail_type, pdf_list)
-            else:
-                raise ValueError("Can't read mail type value!")
-            # Move pdf file to "sent" folder
-            utils.move_pdf_to_sent_folder(pdf_list)
-        except ValueError:
-            logging.warning("Error decoding " + utils.read_config_value('PATH', 'clients_filename') +
-                            " for client " + code+"\n")
+    def sent_pdf_list_to_customer(self, customer, pdf_list):
+        # Send mails
+        self._send_mail(customer, pdf_list)
+        # Move pdf file to "sent" folder
+        utils.move_pdf_to_sent_folder(pdf_list)
 
-    # send mail with standard mail address
-    def _send_mail(self, receiver, mail_type, pdf_list):
-        logging.info("sending standard mail to: " + receiver)
+    def _send_mail(self, customer, pdf_list):
+        logging.info("sending standard mail to: " + customer.mail)
 
         body = utils.read_mail_content()
 
-        sender_by_mail_type = self._get_sender_by_mail_type(mail_type)
-        message = self._build_message(receiver, sender_by_mail_type)
+        sender = self._get_sender_by_mail_type(customer.mail_type)
+
+        message = self._build_message(sender, customer)
         message.attach(MIMEText(body, 'plain'))
         message = self._add_attachments(message, pdf_list)
 
-        server = self._build_server(mail_type)
+        server = self._build_server(customer.mail_type)
 
         text = message.as_string()
-        server.sendmail(sender_by_mail_type, receiver, text)
+        server.sendmail(sender, customer.mail, text)
         server.quit()
 
         logging.info("mail sent!\n")
@@ -84,16 +77,16 @@ class MailSender:
         return message
 
     def _get_sender_by_mail_type(self, mail_type):
-        if mail_type == "False":
-            sender_by_mail_type = self.sender
+        if mail_type == "Falso":
+            sender = self.sender
         else:
-            sender_by_mail_type = self.sender_pec
-        return sender_by_mail_type
+            sender = self.sender_pec
+        return sender
 
-    def _build_message(self, receiver, sender):
+    def _build_message(self, sender, customer):
         message = MIMEMultipart()
-        message['From'] = sender
-        message['To'] ="Ragione sociale <"+receiver+">"
+        message['From'] = utils.read_config_value('INFO', 'mittente') + " <" + sender + ">"
+        message['To'] = customer.rag_soc + " <" + customer.mail + ">"
         message['Subject'] = utils.read_subject_content() + ' ' + self._month + ' ' + self._year
         return message
 

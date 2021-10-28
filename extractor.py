@@ -2,6 +2,7 @@ import csv
 import os
 import path_utils
 from collections import defaultdict
+from customer import Customer
 import logging
 
 
@@ -11,19 +12,22 @@ def scan_pdfs():
     return add_values_in_dict(files)
 
 
-def find_emails(code):
-    email_info = None
+def find_customer_by_code(code):
+    customer = None
     with open(path_utils.get_clients_file()) as csvDataFile:
         csv_reader = csv.reader(csvDataFile)
         for row in csv_reader:
             split_row = row[0].split("#")
             if len(split_row) != 4:
-                logging.error("Error format in customer line: "+row[0]+"\n")
+                logging.error("Format error in customer line: "+row[0]+"\n")
             elif split_row[0] == code:
-                email_info = split_row[2], split_row[3]
-    if email_info is None:
-        raise ValueError("Can't find mail address!\n")
-    return email_info
+                if split_row[3] == "Vero" or split_row[3] == "Falso":
+                    customer = Customer(code, split_row[1], split_row[2], split_row[3])
+                else:
+                    raise SyntaxError("Error in mail type value")
+    if customer is None:
+        raise ValueError("Can't find mail address!")
+    return customer
 
 
 def add_values_in_dict(files):
