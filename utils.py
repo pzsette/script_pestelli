@@ -21,7 +21,7 @@ def move_pdf_to_sent_folder(pdf_list):
                 if not os.path.exists(os.path.join(path_utils.get_sent_folder_path(), new_name)):
                     shutil.copy(os.path.join(path_utils.get_to_send_folder_path(), pdf),
                                 os.path.join(path_utils.get_sent_folder_path(), new_name))
-                    logging.info("copied " + pdf + " as " + new_name + " in destinatio folder")
+                    logging.info("copied " + pdf + " as " + new_name + " in destination folder\n")
                     os.remove(os.path.join(path_utils.get_to_send_folder_path(), pdf))
                     break
                 ii += 1
