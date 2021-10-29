@@ -9,18 +9,20 @@ import logging
 # move pdf files in the list to "sent" folder
 def move_pdf_to_sent_folder(pdf_list):
     for pdf in pdf_list:
-        if os.path.exists(os.path.join(path_utils.get_sent_folder_path(), pdf)):
+        filename, extension = os.path.splitext(pdf)
+        if not os.path.exists(os.path.join(path_utils.get_sent_folder_path(), pdf)):
             shutil.copy(os.path.join(path_utils.get_to_send_folder_path(), pdf),
                         os.path.join(path_utils.get_sent_folder_path(), pdf))
             os.remove(os.path.join(path_utils.get_to_send_folder_path(), pdf))
         else:  # file already exists
             ii = 1
             while True:
-                new_name = os.path.join(basedir, base, base + "_" + str(ii) + extension)
-                if not os.path.exists(new_name):
-                    shutil.copy(old_name, new_name)
-                    print
-                    "Copied", old_name, "as", new_name
+                new_name = filename + "_" + str(ii) + extension
+                if not os.path.exists(os.path.join(path_utils.get_sent_folder_path(), new_name)):
+                    shutil.copy(os.path.join(path_utils.get_to_send_folder_path(), pdf),
+                                os.path.join(path_utils.get_sent_folder_path(), new_name))
+                    logging.info("copied " + pdf + " as " + new_name + " in destinatio folder")
+                    os.remove(os.path.join(path_utils.get_to_send_folder_path(), pdf))
                     break
                 ii += 1
 
