@@ -35,7 +35,10 @@ class MailSender:
         utils.move_pdf_to_sent_folder(pdf_list)
 
     def _send_mail(self, customer, pdf_list):
-        logging.info("sending standard mail to: " + customer.mail)
+        if customer.mail_type == "Falso":
+            logging.info("sending standard mail to: " + customer.mail)
+        else:
+            logging.info("sending PEC mail to: " + customer.mail)
 
         body = utils.read_mail_content()
 
