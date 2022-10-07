@@ -89,7 +89,8 @@ class MailSender:
     def _build_message(self, sender, customer):
         message = MIMEMultipart()
         message['From'] = utils.read_config_value('INFO', 'mittente') + " <" + sender + ">"
-        message['To'] = customer.rag_soc + " <" + customer.mail + ">"
+        custom_san = customer.rag_soc.replace('.', ' ')
+        message['To'] = custom_san + " <" + customer.mail + ">"
         message['Subject'] = utils.read_subject_content() + ' ' + self._month + ' ' + self._year
         return message
 
